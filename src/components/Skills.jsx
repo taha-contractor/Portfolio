@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { VscGraph} from "react-icons/vsc";
 import { 
   FaJava,
   FaPython,
@@ -13,9 +14,15 @@ import {
   FaAws,
   FaDatabase,
   FaNetworkWired,
+  FaBrain,
   FaDev,
+  FaChartArea,
+  FaFilter,
+  FaServer,
 } from "react-icons/fa";
-import { 
+import {
+  SiNumpy,
+  SiPandas, 
   SiTailwindcss,
   SiJavascript,
   SiMongodb,
@@ -26,8 +33,14 @@ import {
   SiFirebase,
   SiDocker,
   SiCplusplus,
+  SiLangchain,
+  SiLanguagetool,
+  SiOpencv,
 } from "react-icons/si";
 import { fadeUp } from "./animationHelpers";
+import { MdEngineering, MdLanguage } from "react-icons/md";
+import { GiArtificialIntelligence } from "react-icons/gi";
+import { PiOpenAiLogo } from "react-icons/pi";
 
 const Skills = () => {
   const skillGroups = [
@@ -52,6 +65,7 @@ const Skills = () => {
       title: "Frontend / Backend Frameworks",
       skills: [
         { icon: <FaReact />, label: "ReactJS" },
+        { icon: <FaPython />, label: "Streamlit" },
         { icon: <SiNodedotjs />, label: "NodeJS" },
         { icon: <SiExpress />, label: "ExpressJS" },
       ],
@@ -62,6 +76,31 @@ const Skills = () => {
         { icon: <SiMysql />, label: "MySQL" },
         { icon: <SiMongodb />, label: "MongoDB" },
         { icon: <SiFirebase />, label: "Firebase" },
+      ],
+    },
+    {
+      title: "Machine Learning / Data Science",
+      skills: [
+        { icon: <SiNumpy />, label: "NumPy" },
+        { icon: <SiPandas />, label: "Pandas" },
+        { icon: <VscGraph />, label: "Matplotlib" },
+        { icon: <VscGraph />, label: "Seaborn" },
+        { icon: <FaBrain />, label: "Scikit-learn" },
+        { icon: <FaChartArea />, label: "Exploratory Data Analysis (EDA)" },
+        { icon: <FaFilter />, label: "Data Cleaning & Preprocessing" },
+        { icon: <MdEngineering />, label: "Feature Extraction & Engineering" },
+      ],
+    },
+    {
+      title: "Artificial Intelligence",
+      skills: [
+        { icon: <GiArtificialIntelligence />, label: "Prompt Engineering" },
+        { icon: <PiOpenAiLogo />, label: "Large Language Models (LLMs)" },
+        { icon: <FaServer />, label: "Model Context Protocols (MCP)" },
+        { icon: <SiLangchain />, label: "LangChain" },
+        { icon: <MdLanguage />, label: "LangGraph" },
+        { icon: <SiLanguagetool />, label: "Natural Language Processing (NLP)" },
+        { icon: <SiOpencv />, label: "Optical Character Recognition (OCR)" },
       ],
     },
     {
