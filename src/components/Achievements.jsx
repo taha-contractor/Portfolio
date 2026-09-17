@@ -65,73 +65,97 @@ const Achievements = () => {
   return (
     <>
       <section
-      id="achievements"
-      className="py-8 md:py-12 bg-gradient-to-br from-gray-900/80 via-blue-900/10 to-indigo-900/20 relative overflow-hidden"
-    >
-      <div className="pointer-events-none absolute right-[-5rem] top-10 h-72 w-72 rounded-full bg-emerald-500/12 blur-3xl" />
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
-        <p className="text-[11px] md:text-xs tracking-[0.3em] text-sky-400/90 uppercase mb-3">
-          Achievements
-        </p>
-        <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6">
-          Certificates
-        </h2>
+        id="achievements"
+        className="py-20 md:py-24 bg-gradient-to-br from-gray-900/80 via-blue-900/10 to-indigo-900/20 relative overflow-hidden"
+      >
+        <div className="pointer-events-none absolute right-[-5rem] top-10 h-72 w-72 rounded-full bg-cyan-500/15 blur-3xl" />
+        <div className="pointer-events-none absolute left-[-5rem] bottom-10 h-72 w-72 rounded-full bg-indigo-500/15 blur-3xl" />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {certificates.map((cert, i) => (
-            <motion.div
-              key={i}
-              variants={fadeUp(i * 0.15)}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.4 }}
-              className="relative bg-gradient-to-br from-gray-800/70 to-blue-900/30 border border-white/15 rounded-2xl p-5 shadow-[0_18px_40px_rgba(15,23,42,0.9)] transform transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.02] hover:border-sky-400/70 hover:shadow-[0_25px_60px_rgba(56,189,248,0.2)] backdrop-blur-sm"
-            >
-              {/* Clickable Thumbnail */}
-              <div
-                onClick={() => openCertLightbox(cert)}
-                className="cursor-pointer rounded-xl overflow-hidden border border-white/10 h-60 md:h-80 flex items-center justify-center"
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <p className="text-[11px] md:text-xs tracking-[0.3em] text-sky-400/90 uppercase mb-3">
+              Achievements
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-8">
+              Certifications & Core Responsibilities
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {certificates.map((cert, i) => (
+              <motion.div
+                key={i}
+                variants={fadeUp(i * 0.15)}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                className="relative bg-gradient-to-br from-gray-800/70 to-blue-900/30 border border-white/15 rounded-2xl p-5 sm:p-6 shadow-[0_18px_40px_rgba(15,23,42,0.9)] transform transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.02] hover:border-sky-400/70 hover:shadow-[0_25px_60px_rgba(56,189,248,0.2)] backdrop-blur-sm flex flex-col justify-between"
               >
-                <img
-                  src={cert.src}
-                  alt={cert.title}
-                  className="max-h-full max-w-full object-contain rounded-xl transition-transform duration-300 hover:scale-[1.02]"
-                  loading="lazy"
-                />
-              </div>
+                <div>
+                  {/* Clickable Thumbnail */}
+                  <div
+                    onClick={() => openCertLightbox(cert)}
+                    className="cursor-pointer rounded-xl overflow-hidden border border-white/10 h-60 md:h-72 flex items-center justify-center bg-black/30 group relative"
+                  >
+                    <img
+                      src={cert.src}
+                      alt={cert.title}
+                      className="max-h-full max-w-full object-contain rounded-xl transition-transform duration-300 group-hover:scale-[1.03]"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-cyan-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <span className="px-3 py-1.5 rounded-full bg-slate-950/80 text-cyan-300 text-xs font-medium border border-cyan-400/40 shadow-lg">
+                        Click to expand
+                      </span>
+                    </div>
+                  </div>
 
-              {/* Certificate Title */}
-              <h3 className="text-lg sm:text-xl font-semibold text-sky-100 mt-4 text-center">
-                {cert.title}
-              </h3>
+                  {/* Certificate Title */}
+                  <h3 className="text-lg sm:text-xl font-semibold text-sky-100 mt-5 text-center">
+                    {cert.title}
+                  </h3>
 
-              {/* What I Learned */}
-              <p className="text-sm text-slate-300 mt-2 text-center">
-                {cert.learn}
-              </p>
+                  {/* What I Learned */}
+                  <p className="text-sm text-slate-300 mt-2 text-center leading-relaxed">
+                    {cert.learn}
+                  </p>
+                </div>
 
-              {/* Issuer + Year */}
-              <p className="text-xs text-slate-400 mt-2 text-center">
-                Issued by: {cert.issuer} {cert.year && `• ${cert.year}`}
-              </p>
-            </motion.div>
-          ))}
+                {/* Issuer + Year */}
+                <p className="text-xs text-cyan-400/90 mt-4 text-center font-medium pt-3 border-t border-white/10">
+                  Issued by: {cert.issuer} {cert.year && `• ${cert.year}`}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            variants={fadeUp(0.2)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            className="mt-14"
+          >
+            <h3 className="text-xl sm:text-2xl font-bold text-white mb-6">
+              Key Responsibilities & Activities
+            </h3>
+
+            <div className="bg-gradient-to-br from-gray-800/70 to-blue-900/30 border border-white/15 rounded-2xl p-6 shadow-[0_18px_40px_rgba(15,23,42,0.9)] transform transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.01] hover:border-sky-400/70 hover:shadow-[0_25px_60px_rgba(56,189,248,0.2)] backdrop-blur-sm">
+              <ul className="list-disc pl-5 space-y-3 text-sm md:text-base text-slate-300 leading-relaxed">
+                <li className="hover:text-white transition-colors duration-200">Participated in Smart India Hackathon college rounds and competitive coding events.</li>
+                <li className="hover:text-white transition-colors duration-200">Collaborated on team-based academic and side projects, taking ownership of core full-stack modules.</li>
+                <li className="hover:text-white transition-colors duration-200">Proactively explored emerging AI tools, LLM frameworks, and web architectures beyond standard curriculum.</li>
+                <li className="hover:text-white transition-colors duration-200">Contributed to project architecture planning, feature testing, code refactoring, and technical documentation.</li>
+              </ul>
+            </div>
+          </motion.div>
         </div>
-
-        <h2 className="text-2xl sm:text-3xl font-bold text-white mt-12 mb-6">
-          Responsibilities
-        </h2>
-
-        <div className="bg-black/45 border border-white/10 rounded-2xl p-5 shadow-[0_18px_40px_rgba(15,23,42,0.9)]">
-          <ul className="list-disc pl-5 space-y-3 text-sm text-slate-300">
-            <li>Participated in Smart India Hackathon college rounds and coding events.</li>
-            <li>Collaborated on team-based projects, taking ownership of core modules.</li>
-            <li>Proactively explored new tools and technologies beyond academics.</li>
-            <li>Contributed to project planning, testing and documentation.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
+      </section>
     <CertificateLightbox
       image={activeCert?.src}
       title={activeCert?.title}

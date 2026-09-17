@@ -2,8 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FiDownload, FiArrowUpRight } from "react-icons/fi";
 import { fadeUp, subtleFloat } from "./animationHelpers";
-import { p } from "framer-motion/client";
-import profile from "../assets/profile.png";
+import profile from "../assets/profile.jpeg";
 
 // Typing animation component
 const TypingText = ({ texts = ["Web Developer", "AI & Cybersecurity Enthusiast", "Problem Solver", "Innovator"] }) => {
@@ -222,18 +221,18 @@ const Hero = () => {
           </div>
 
           {/* Stats row */}
-          <div className="flex flex-wrap items-center gap-3 text-left sm:text-left">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/40 border border-white/15 text-[11px] sm:text-xs text-slate-200">
-              <span className="font-bold text-sky-300">4+</span>
+          <div className="flex flex-wrap items-center gap-2.5 text-left sm:text-left">
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/5 border border-white/15 text-xs text-slate-300 hover:bg-cyan-400/10 hover:border-cyan-400/30 transition-all duration-200">
+              <span className="font-bold text-cyan-300">4+</span>
               <span>Projects</span>
             </span>
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/40 border border-white/15 text-[11px] sm:text-xs text-slate-200">
-              <span className="font-bold text-sky-300">3+</span>
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/5 border border-white/15 text-xs text-slate-300 hover:bg-cyan-400/10 hover:border-cyan-400/30 transition-all duration-200">
+              <span className="font-bold text-cyan-300">6+</span>
               <span>Certifications</span>
             </span>
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/40 border border-white/15 text-[11px] sm:text-xs text-slate-200">
-              <span className="font-bold text-sky-300">1+</span>
-              <span>Hackathon Participation</span>
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/5 border border-white/15 text-xs text-slate-300 hover:bg-cyan-400/10 hover:border-cyan-400/30 transition-all duration-200">
+              <span className="font-bold text-cyan-300">1+</span>
+              <span>Hackathons</span>
             </span>
           </div>
         </motion.div>

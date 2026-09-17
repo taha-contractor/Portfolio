@@ -77,14 +77,14 @@ const Experience = () => {
               className="w-full group"
             >
               {/* Card Container */}
-              <div className="bg-gradient-to-br from-gray-800/80 to-blue-900/30 border border-white/15 rounded-2xl p-6 shadow-[0_18px_40px_rgba(15,23,42,0.95)] transform transition-all duration-300 hover:-translate-y-1.5 hover:border-cyan-400/60 hover:shadow-[0_25px_60px_rgba(56,189,248,0.2)] backdrop-blur-sm relative w-full">
+              <div className="bg-gradient-to-br from-gray-800/70 to-blue-900/30 border border-white/15 rounded-2xl p-5 sm:p-6 shadow-[0_18px_40px_rgba(15,23,42,0.9)] transform transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.02] hover:border-sky-400/70 hover:shadow-[0_25px_60px_rgba(56,189,248,0.2)] backdrop-blur-sm relative w-full">
                 {/* Accent glow on top header */}
-                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent rounded-t-2xl pointer-events-none" />
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent rounded-t-2xl pointer-events-none" />
 
                 {/* Header Section */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4">
                   <div>
-                    <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-cyan-300 transition-colors duration-300 leading-snug">
+                    <h3 className="text-lg sm:text-xl font-semibold text-sky-100 group-hover:text-cyan-300 transition-colors duration-300 leading-snug">
                       {exp.role}
                     </h3>
                     <p className="text-sm font-semibold text-cyan-400/90 mt-1">
@@ -92,11 +92,11 @@ const Experience = () => {
                     </p>
                   </div>
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-400">
-                    <span className="flex items-center gap-1">
-                      <FiCalendar className="text-cyan-400/80" /> {exp.duration}
+                    <span className="flex items-center gap-1.5">
+                      <FiCalendar className="text-cyan-400" /> {exp.duration}
                     </span>
-                    <span className="flex items-center gap-1">
-                      <FiMapPin className="text-cyan-400/80" /> {exp.location}
+                    <span className="flex items-center gap-1.5">
+                      <FiMapPin className="text-cyan-400" /> {exp.location}
                     </span>
                   </div>
                 </div>
@@ -111,11 +111,11 @@ const Experience = () => {
                 </ul>
 
                 {/* Tech Badge Tags */}
-                <div className="flex flex-wrap gap-2 text-xs">
+                <div className="flex flex-wrap gap-2.5">
                   {exp.tech.map((t, i) => (
                     <span
                       key={i}
-                      className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-cyan-200 hover:border-cyan-400/40 hover:bg-cyan-400/5 transition-all duration-200"
+                      className="px-3 py-1.5 rounded-xl bg-white/5 border border-white/15 text-xs md:text-sm text-slate-300 hover:bg-cyan-400/10 hover:border-cyan-400/30 hover:text-white transition-all duration-200"
                     >
                       {t}
                     </span>
