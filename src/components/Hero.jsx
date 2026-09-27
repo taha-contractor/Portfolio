@@ -5,7 +5,7 @@ import { fadeUp, subtleFloat } from "./animationHelpers";
 import profile from "../assets/profile.jpeg";
 
 // Typing animation component
-const TypingText = ({ texts = ["Web Developer", "AI & Cybersecurity Enthusiast", "Problem Solver", "Innovator"] }) => {
+const TypingText = ({ texts = ["AI/ML Developer", "Full-Stack Developer", "Generative AI Enthusiast", "Aspiring Data Scientist", "Software Engineer", "Problem Solver", "Innovator"] }) => {
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [currentText, setCurrentText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
@@ -155,7 +155,7 @@ const Hero = () => {
         ))}
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-16 grid lg:grid-cols-2 gap-16 items-center">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 grid lg:grid-cols-2 gap-16 items-center">
         {/* Left content with enhanced typography */}
         <motion.div
           variants={fadeUp(0.1)}
@@ -174,7 +174,7 @@ const Hero = () => {
               transition={{ duration: 2, repeat: Infinity }}
             />
             <span className="uppercase tracking-[0.3em] font-medium">
-              Open to Opportunities
+              Open to Internships & Entry-Level Opportunities
             </span>
           </motion.div>
 
@@ -192,9 +192,7 @@ const Hero = () => {
             </div>
             
             <p className="text-base sm:text-lg text-sky-100/90 max-w-2xl leading-relaxed font-light">
-              I build modern, secure and intelligent experiences using clean
-              code, strong fundamentals and a constant curiosity for how things
-              work under the hood.
+              I build intelligent and scalable applications using AI/ML, Generative AI and modern full-stack technologies — turning ideas into practical, real-world solutions.
             </p>
           </div>
 

@@ -133,10 +133,10 @@ const Skills = () => {
   ];
 
   return (
-    <section id="skills" className="py-20 md:py-24 bg-gradient-to-br from-gray-900/80 via-blue-900/10 to-indigo-900/20 relative overflow-hidden">
+    <section id="skills" className="py-8 md:py-10 bg-gradient-to-br from-gray-900/80 via-blue-900/10 to-indigo-900/20 relative overflow-hidden">
       <div className="pointer-events-none absolute right-[-4rem] bottom-0 h-72 w-72 rounded-full bg-sky-500/15 blur-3xl" />
       <div className="pointer-events-none absolute left-[-4rem] top-0 h-72 w-72 rounded-full bg-indigo-500/15 blur-3xl" />
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -146,9 +146,12 @@ const Skills = () => {
           <p className="text-[11px] md:text-xs tracking-[0.3em] text-sky-400/90 uppercase mb-3">
             Skills
           </p>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+            Technical Skills &amp; Expertise
+          </h2>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-6 mt-10">
+        <div className="grid md:grid-cols-2 gap-6 mt-6">
           {skillGroups.map((group, idx) => (
             <motion.div
               key={group.title}
@@ -156,9 +159,13 @@ const Skills = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.4 }}
-              className="relative bg-gradient-to-br from-gray-800/70 to-blue-900/30 border border-white/15 rounded-2xl p-5 shadow-[0_18px_40px_rgba(15,23,42,0.9)] transform transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.02] hover:border-sky-400/70 hover:shadow-[0_25px_60px_rgba(56,189,248,0.2)]"
+              whileHover={{ y: -6, scale: 1.02 }}
+              className="group/card relative bg-gradient-to-br from-gray-800/70 to-blue-900/30 border border-white/15 rounded-2xl p-5 sm:p-6 shadow-[0_18px_40px_rgba(15,23,42,0.9)] transform transition-all duration-300 hover:border-sky-400/70 hover:shadow-[0_25px_60px_rgba(56,189,248,0.25)] backdrop-blur-sm overflow-hidden"
             >
-              <h3 className="text-sm sm:text-base font-semibold text-cyan-300 mb-4 relative pl-4 before:content-[''] before:absolute before:left-0 before:top-1/2 before:transform before:-translate-y-1/2 before:w-2 before:h-2 before:rounded-full before:bg-cyan-400">
+              {/* Top accent glow line */}
+              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent rounded-t-2xl pointer-events-none group-hover/card:via-cyan-400/60 transition-all duration-300" />
+
+              <h3 className="text-base sm:text-lg font-semibold text-cyan-300 group-hover/card:text-cyan-200 transition-colors duration-300 mb-4 relative pl-4 before:content-[''] before:absolute before:left-0 before:top-1/2 before:transform before:-translate-y-1/2 before:w-2 before:h-2 before:rounded-full before:bg-cyan-400">
                 {group.title}
               </h3>
               <div className="flex flex-wrap gap-3">
@@ -166,12 +173,12 @@ const Skills = () => {
                   <motion.div
                     whileHover={{ y: -4, scale: 1.03 }}
                     key={s.label}
-                    className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/15 text-sm md:text-base text-slate-300 leading-relaxed hover:bg-cyan-400/10 hover:border-cyan-400/30 transition-all duration-200 group"
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/15 text-sm md:text-base text-slate-300 leading-relaxed hover:bg-cyan-400/10 hover:border-cyan-400/30 hover:text-white transition-all duration-200 group/pill"
                   >
-                    <span className="text-lg sm:text-xl text-cyan-400 group-hover:text-cyan-300 transition-colors duration-200">
+                    <span className="text-lg sm:text-xl text-cyan-400 group-hover/pill:text-cyan-300 transition-colors duration-200">
                       {s.icon}
                     </span>
-                    <span className="group-hover:text-white transition-colors duration-200">{s.label}</span>
+                    <span className="group-hover/pill:text-white transition-colors duration-200">{s.label}</span>
                   </motion.div>
                 ))}
               </div>

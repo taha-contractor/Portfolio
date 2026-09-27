@@ -1,351 +1,186 @@
-// Global variable to track lightbox state
-let isLightboxOpen = false;
-
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { FiX, FiArrowUpRight, FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import { FaUtensils, FaPlane, FaCar, FaImage } from "react-icons/fa";
-import { smoothScale, smoothSlideIn } from "./animationHelpers";
-
-// Project Image Carousel Component
-const ProjectImageCarousel = ({ images }) => {
-  const [index, setIndex] = useState(0);
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-
-  const openLightbox = () => {
-    setLightboxOpen(true);
-    isLightboxOpen = true;
-  };
-  
-  const closeLightbox = () => {
-    isLightboxOpen = false;
-    // Small delay to ensure proper state update
-    setTimeout(() => {
-      setLightboxOpen(false);
-    }, 10);
-  };
-
-  const nextImage = () => {
-    setIndex((prevIndex) => (prevIndex + 1) % images.length);
-  };
-
-  const prevImage = () => {
-    setIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
-  };
-
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (!lightboxOpen) return;
-      
-      if (e.key === 'ArrowRight') {
-        nextImage();
-      } else if (e.key === 'ArrowLeft') {
-        prevImage();
-      } else if (e.key === 'Escape') {
-        closeLightbox();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lightboxOpen, images.length]);
-
-  if (!images || images.length === 0) return null;
-
-  return (
-    <>
-      <div className="flex overflow-x-auto gap-3 pb-3 snap-x snap-mandatory scrollbar-none sm:grid sm:grid-cols-2 sm:overflow-x-visible sm:pb-0 sm:snap-none mb-4">
-        {images.map((image, idx) => (
-          <div 
-            key={idx}
-            onClick={() => {
-              setIndex(idx);
-              openLightbox();
-            }}
-            className="min-w-[80%] sm:min-w-0 h-36 sm:h-40 snap-center shrink-0 rounded-xl overflow-hidden bg-white/3 border border-white/8 flex items-center justify-center text-[11px] text-gray-300 hover:scale-[1.02] transition-transform duration-300 hover:shadow-[0_20px_60px_rgba(0,0,0,0.6)] cursor-pointer"
-          >
-            <img 
-              src={image} 
-              alt={`Screenshot ${idx + 1}`} 
-              className="w-full h-full object-cover rounded-xl"
-              loading="lazy"
-              onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.parentNode.querySelector('div').style.display = 'flex';
-              }}
-            />
-            <div className="text-center hidden">
-              <span className="block mb-1">📸</span>
-              <span>Screenshot {idx + 1}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Lightbox Viewer */}
-      {lightboxOpen && (
-        <LightboxViewer 
-          images={images} 
-          index={index} 
-          onClose={closeLightbox}
-          onNext={nextImage}
-          onPrev={prevImage}
-        />
-      )}
-    </>
-  );
-};
-
-// Lightbox Viewer Component
-const LightboxViewer = ({ images, index, onClose, onNext, onPrev }) => {
-  const [currentIndex, setCurrentIndex] = useState(index);
-  const [touchStart, setTouchStart] = useState(null);
-  const [touchEnd, setTouchEnd] = useState(null);
-
-  // Update currentIndex when index prop changes
-  useEffect(() => {
-    setCurrentIndex(index);
-  }, [index]);
-
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'ArrowRight') {
-        handleNext();
-      } else if (e.key === 'ArrowLeft') {
-        handlePrev();
-      } else if (e.key === 'Escape') {
-        e.stopPropagation();
-        isLightboxOpen = false;
-        // Small delay to ensure proper state update
-        setTimeout(() => {
-          onClose();
-        }, 10);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-    onNext && onNext();
-  };
-
-  const handlePrev = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
-    onPrev && onPrev();
-  };
-
-  // Touch handlers for swipe
-  const handleTouchStart = (e) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const handleTouchMove = (e) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-
-  const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
-    
-    if (isLeftSwipe) {
-      handleNext();
-    } else if (isRightSwipe) {
-      handlePrev();
-    }
-  };
-
-  return (
-    <motion.div
-      variants={smoothScale(0)}
-      initial="hidden"
-      animate="visible"
-      exit="hidden"
-      className="fixed inset-0 z-[80] bg-black/90 backdrop-blur-xl flex items-center justify-center"
-      onClick={(e) => {
-        e.stopPropagation();
-        isLightboxOpen = false;
-        // Small delay to ensure proper state update
-        setTimeout(() => {
-          onClose();
-        }, 10);
-      }}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-    >
-      {/* Centered image with enhanced styling */}
-      <motion.div 
-        variants={smoothSlideIn('up', 0.1)}
-        initial="hidden"
-        animate="visible"
-        exit="hidden"
-        className="max-w-5xl max-h-[85vh] flex items-center justify-center p-4"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="relative group">
-          <img 
-            src={images[currentIndex]} 
-            alt={`Screenshot ${currentIndex + 1}`} 
-            className="object-contain max-h-[85vh] rounded-xl shadow-2xl border border-white/10"
-            loading="lazy"
-          />
-          {/* Subtle glow effect */}
-          <div className="absolute inset-0 rounded-xl shadow-[0_0_30px_rgba(56,189,248,0.3)] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        </div>
-      </motion.div>
-      
-      {/* Enhanced Navigation buttons with glow effect - responsive design */}
-      <motion.button
-        variants={smoothSlideIn('left', 0.2)}
-        initial="hidden"
-        animate="visible"
-        exit="hidden"
-        onClick={(e) => {
-          e.stopPropagation();
-          handlePrev();
-        }}
-        className="absolute left-4 sm:left-6 bg-black/20 hover:bg-black/40 sm:bg-black/40 sm:hover:bg-black/60 rounded-full p-2 sm:p-4 text-white focus:outline-none focus:ring-2 focus:ring-sky-400 hover:shadow-[0_0_15px_rgba(56,189,248,0.5)] transition-all duration-300"
-        aria-label="Previous image"
-      >
-        <FiChevronLeft size={20} className="sm:w-7 sm:h-7" />
-      </motion.button>
-      
-      <motion.button
-        variants={smoothSlideIn('right', 0.2)}
-        initial="hidden"
-        animate="visible"
-        exit="hidden"
-        onClick={(e) => {
-          e.stopPropagation();
-          handleNext();
-        }}
-        className="absolute right-4 sm:right-6 bg-black/20 hover:bg-black/40 sm:bg-black/40 sm:hover:bg-black/60 rounded-full p-2 sm:p-4 text-white focus:outline-none focus:ring-2 focus:ring-sky-400 hover:shadow-[0_0_15px_rgba(56,189,248,0.5)] transition-all duration-300"
-        aria-label="Next image"
-      >
-        <FiChevronRight size={20} className="sm:w-7 sm:h-7" />
-      </motion.button>
-      
-      {/* Enhanced Close button with glow effect */}
-      <motion.button
-        variants={smoothSlideIn('up', 0.2)}
-        initial="hidden"
-        animate="visible"
-        exit="hidden"
-        onClick={(e) => {
-          e.stopPropagation();
-          isLightboxOpen = false;
-          // Small delay to ensure proper state update
-          setTimeout(() => {
-            onClose();
-          }, 10);
-        }}
-        className="absolute top-6 right-6 bg-black/40 hover:bg-black/60 rounded-full p-4 text-white focus:outline-none focus:ring-2 focus:ring-sky-400 hover:shadow-[0_0_15px_rgba(56,189,248,0.5)] transition-all duration-300"
-        aria-label="Close lightbox"
-      >
-        <FiX size={28} />
-      </motion.button>
-    </motion.div>
-  );
-};
+import React, { useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FiX, FiExternalLink, FiCheckCircle, FiLayers, FiUserCheck, FiCpu } from "react-icons/fi";
+import { FaGithub } from "react-icons/fa";
+import { smoothScale } from "./animationHelpers";
 
 const ProjectDetailModal = ({ project, onClose }) => {
-  if (!project) return null;
+  const modalContentRef = useRef(null);
 
-  // Map project IDs to icons
-  const getProjectIcon = (projectId) => {
-    switch (projectId) {
-      case "digital-menu":
-        return <FaUtensils />;
-      case "airline-ticketing":
-        return <FaPlane />;
-      case "car-racing":
-        return <FaCar />;
-      case "image-finder":
-        return <FaImage />;
-      default:
-        return null;
+  // Close on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
+  // Close on backdrop click outside modal content
+  const handleBackdropClick = (e) => {
+    if (modalContentRef.current && !modalContentRef.current.contains(e.target)) {
+      onClose();
     }
   };
 
-  const projectIcon = getProjectIcon(project.id);
-
-  // Handle Escape key press - check global lightbox state
-  useEffect(() => {
-    const handleEsc = (e) => {
-      if (e.key === 'Escape') {
-        // Only close main modal if lightbox is not open
-        if (!isLightboxOpen) {
-          onClose();
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
-  }, [onClose]);
+  if (!project) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] bg-black/70 backdrop-blur flex items-center justify-center px-3 sm:px-4 overflow-y-auto py-8">
+    <div
+      className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
+      onClick={handleBackdropClick}
+      role="dialog"
+      aria-modal="true"
+    >
       <motion.div
-        variants={smoothScale(0.1)}
+        ref={modalContentRef}
+        variants={smoothScale(0)}
         initial="hidden"
         animate="visible"
         exit="hidden"
-        className="max-w-3xl w-full bg-gradient-to-br from-gray-800/90 via-blue-900/30 to-indigo-900/40 border border-white/20 rounded-2xl p-5 sm:p-6 relative shadow-[0_22px_60px_rgba(15,23,42,0.95)] my-auto"
+        className="relative w-full max-w-3xl max-h-[90vh] flex flex-col bg-gradient-to-br from-gray-900 via-slate-900 to-indigo-950/70 border border-white/20 rounded-2xl shadow-[0_25px_70px_rgba(15,23,42,0.95)] overflow-hidden"
       >
-        <div className="absolute top-6 left-6 text-sky-300/95 text-2xl">
-          {projectIcon}
+        {/* Top Accent Line */}
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent pointer-events-none" />
+
+        {/* Modal Header */}
+        <div className="flex items-start justify-between gap-4 p-5 sm:p-6 border-b border-white/10 bg-white/[0.02]">
+          <div className="flex items-center gap-3">
+            <div className="p-3 rounded-xl bg-cyan-400/10 border border-cyan-400/30 text-cyan-400 text-2xl flex-shrink-0">
+              {project.icon}
+            </div>
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[10px] sm:text-xs tracking-[0.25em] text-cyan-400/90 uppercase font-semibold">
+                  Case Study &amp; Technical Breakdown
+                </span>
+                {project.status === "IN DEVELOPMENT" && (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[9px] font-semibold tracking-wider uppercase bg-amber-400/15 border border-amber-400/40 text-amber-300">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                    In Development
+                  </span>
+                )}
+              </div>
+              <h2 className="text-xl sm:text-2xl font-bold text-white mt-1 leading-snug">
+                {project.title}
+              </h2>
+            </div>
+          </div>
+
+          {/* Close Button */}
+          <button
+            onClick={onClose}
+            className="p-2 rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-colors flex-shrink-0"
+            aria-label="Close modal"
+          >
+            <FiX className="text-xl" />
+          </button>
         </div>
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-white"
-        >
-          <FiX className="text-xl" />
-        </button>
 
-        <h3 className="text-xl sm:text-2xl font-semibold text-sky-300 mb-2 pl-10">
-          {project.title}
-        </h3>
-        <p className="text-sm sm:text-base text-gray-300 mb-4">
-          {project.longDesc}
-        </p>
+        {/* Modal Body (Scrollable) */}
+        <div className="p-5 sm:p-6 overflow-y-auto space-y-6 text-slate-300 text-sm sm:text-base leading-relaxed scrollbar-thin scrollbar-thumb-cyan-500/20 scrollbar-track-transparent">
+          {/* Detailed Overview */}
+          <div>
+            <h3 className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-sky-300 mb-2 flex items-center gap-2">
+              <FiLayers className="text-cyan-400" />
+              <span>Project Overview</span>
+            </h3>
+            <p className="text-slate-300 leading-relaxed bg-white/[0.02] border border-white/5 rounded-xl p-4">
+              {project.longDesc}
+            </p>
+          </div>
 
-        <p className="text-xs sm:text-sm text-gray-400 mb-4">
-          <span className="font-semibold text-gray-200">My Role:</span>{" "}
-          {project.role}
-        </p>
+          {/* Key Features */}
+          {project.features && project.features.length > 0 && (
+            <div>
+              <h3 className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-sky-300 mb-3 flex items-center gap-2">
+                <FiCheckCircle className="text-cyan-400" />
+                <span>Key Features &amp; Capabilities</span>
+              </h3>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {project.features.map((feature, i) => (
+                  <li
+                    key={i}
+                    className="flex items-start gap-2.5 bg-white/[0.02] border border-white/5 rounded-xl p-3 text-xs sm:text-sm text-slate-300"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-2 flex-shrink-0" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-        <div className="mb-4 flex flex-wrap gap-2 text-[11px] sm:text-xs">
-          {project.tech.map((t) => (
-            <span
-              key={t}
-              className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sky-200"
+          {/* Role & Contributions */}
+          {project.role && (
+            <div>
+              <h3 className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-sky-300 mb-2 flex items-center gap-2">
+                <FiUserCheck className="text-cyan-400" />
+                <span>My Role &amp; Contribution</span>
+              </h3>
+              <p className="text-slate-300 leading-relaxed bg-white/[0.02] border border-white/5 rounded-xl p-4 text-xs sm:text-sm">
+                {project.role}
+              </p>
+            </div>
+          )}
+
+          {/* Challenges & Learnings */}
+          {project.challenges && (
+            <div>
+              <h3 className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-sky-300 mb-2 flex items-center gap-2">
+                <FiCpu className="text-cyan-400" />
+                <span>Engineering Challenges &amp; Learnings</span>
+              </h3>
+              <p className="text-slate-300 leading-relaxed bg-white/[0.02] border border-white/5 rounded-xl p-4 text-xs sm:text-sm">
+                {project.challenges}
+              </p>
+            </div>
+          )}
+
+          {/* Tech Stack */}
+          <div>
+            <h3 className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-sky-300 mb-3">
+              Technologies &amp; Tools Used
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {project.tech.map((t) => (
+                <span
+                  key={t}
+                  className="px-3 py-1.5 rounded-xl bg-white/5 border border-white/15 text-xs text-cyan-200 font-medium"
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Modal Footer Actions */}
+        <div className="p-4 sm:p-6 border-t border-white/10 bg-slate-950/50 flex flex-wrap items-center justify-end gap-3">
+          {/* Live Demo Button (Conditional) */}
+          {project.liveDemo && (
+            <a
+              href={project.liveDemo}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-600 via-cyan-500 to-blue-600 text-white font-semibold text-xs sm:text-sm shadow-[0_10px_25px_rgba(56,189,248,0.4)] hover:shadow-[0_15px_35px_rgba(56,189,248,0.6)] transition-all duration-300 flex items-center gap-2"
             >
-              {t}
-            </span>
-          ))}
-        </div>
+              <span>Live Demo</span>
+              <FiExternalLink className="text-sm" />
+            </a>
+          )}
 
-        {project.screenshots && project.screenshots.length > 0 && (
-          <ProjectImageCarousel images={project.screenshots} />
-        )}
-
-        <div className="flex justify-end gap-3 mt-2">
+          {/* GitHub Repository Button (Always shown) */}
           <a
             href={project.code}
             target="_blank"
-            className="px-4 py-2 rounded-xl border border-sky-500/60 text-sky-300 flex items-center gap-2 text-xs sm:text-sm"
+            rel="noopener noreferrer"
+            className="px-5 py-2.5 rounded-xl bg-white/5 border border-white/15 hover:border-cyan-400/60 hover:bg-cyan-400/10 text-slate-200 hover:text-white font-medium text-xs sm:text-sm transition-all duration-200 flex items-center gap-2"
           >
-            View Code <FiArrowUpRight />
+            <FaGithub className="text-base" />
+            <span>GitHub Repository</span>
           </a>
         </div>
       </motion.div>
@@ -353,4 +188,4 @@ const ProjectDetailModal = ({ project, onClose }) => {
   );
 };
 
-export default ProjectDetailModal;
+export default ProjectDetailModal;

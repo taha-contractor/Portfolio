@@ -27,8 +27,8 @@ const Navbar = ({ activeSection, onNavClick }) => {
   ];
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "py-2 bg-gray-900/90 backdrop-blur-3xl border-b border-cyan-500/20" : "py-3 bg-transparent"}`}>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+    <header className={`fixed top-0 left-0 right-0 z-[80] transition-all duration-300 ${isScrolled ? "py-2 bg-gray-950 md:bg-gray-900/90 md:backdrop-blur-3xl border-b border-cyan-500/20" : "py-3 bg-gray-950 md:bg-transparent"}`}>
+      <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <motion.a
@@ -133,7 +133,7 @@ const Navbar = ({ activeSection, onNavClick }) => {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
               onClick={() => setIsMenuOpen(false)}
-              className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm md:hidden"
+              className="fixed inset-0 z-[60] bg-gray-950/[0.92] backdrop-blur-xl md:hidden"
             />
 
             {/* Sidebar Panel */}
@@ -142,11 +142,16 @@ const Navbar = ({ activeSection, onNavClick }) => {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 350, damping: 30 }}
-              className="fixed top-0 right-0 bottom-0 z-[70] w-72 max-w-[80vw] bg-gray-950/95 backdrop-blur-3xl border-l border-cyan-500/20 shadow-[0_0_50px_rgba(0,0,0,0.8)] flex flex-col justify-between p-6 md:hidden"
+              className="fixed top-0 right-0 bottom-0 z-[70] w-72 max-w-[80vw] bg-gray-950 border-l border-cyan-500/20 shadow-[0_0_50px_rgba(0,0,0,0.8)] flex flex-col p-6 md:hidden"
             >
-              <div>
+              {/* Very subtle surface tint - sits behind the content so the panel stays opaque */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-cyan-500/[0.07] via-transparent to-blue-900/[0.09]"
+              />
+              <div className="flex min-h-0 flex-1 flex-col">
                 {/* Header Row */}
-                <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div className="flex flex-shrink-0 items-center justify-between border-b border-white/10 pb-4">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center shadow-[0_0_15px_rgba(56,189,248,0.5)]">
                       <span className="text-white font-bold text-sm">TC</span>
@@ -157,15 +162,15 @@ const Navbar = ({ activeSection, onNavClick }) => {
                   </div>
                   <button
                     onClick={() => setIsMenuOpen(false)}
-                    className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50"
+                    className="flex h-10 w-10 items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50"
                     aria-label="Close menu"
                   >
-                    <FiX className="text-xl" />
+                    <FiX className="text-[22px]" />
                   </button>
                 </div>
 
                 {/* Vertical Links Stack */}
-                <nav className="flex flex-col gap-2 mt-6">
+                <nav className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto overscroll-contain pt-7">
                   {navItems.map((item) => (
                     <motion.a
                       key={item.id}
@@ -175,10 +180,10 @@ const Navbar = ({ activeSection, onNavClick }) => {
                         onNavClick(item.id);
                         setIsMenuOpen(false);
                       }}
-                      className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                      className={`group relative mr-4 flex h-11 items-center gap-3 rounded-xl pl-3 pr-4 transition-all ${
                         activeSection === item.id
-                          ? "text-cyan-400 bg-gradient-to-r from-cyan-500/10 via-cyan-500/5 to-transparent border-l-4 border-cyan-400 pl-3"
-                          : "text-gray-300 hover:text-white hover:bg-white/5 border-l-4 border-transparent pl-3"
+                          ? "text-cyan-400 bg-gradient-to-r from-cyan-500/10 via-cyan-500/5 to-transparent border-l-4 border-cyan-400"
+                          : "text-gray-300 hover:text-white hover:bg-white/5 border-l-4 border-transparent"
                       }`}
                       whileTap={{ scale: 0.98 }}
                       transition={{ type: "spring", stiffness: 400, damping: 25 }}
@@ -192,7 +197,7 @@ const Navbar = ({ activeSection, onNavClick }) => {
               </div>
 
               {/* Drawer Footer Socials */}
-              <div className="border-t border-white/10 pt-4 flex flex-col gap-3">
+              <div className="flex-shrink-0 border-t border-white/10 pt-4 flex flex-col gap-3">
                 <p className="text-[10px] uppercase tracking-[0.2em] text-slate-500 font-semibold">
                   Connect With Me
                 </p>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
+import Quote from "./components/Quote";
 import About from "./components/About";
 import Experience from "./components/Experience";
 import Education from "./components/Education";
@@ -10,7 +11,11 @@ import Projects from "./components/Projects";
 import Achievements from "./components/Achievements";
 import Contact from "./components/Contact";
 import ProjectDetailModal from "./components/ProjectDetailModal";
-import { FiArrowUp } from "react-icons/fi";
+import { FiArrowUp, FiArrowRight } from "react-icons/fi";
+import { FaCoffee } from "react-icons/fa";
+
+// Set this to your live Buy Me a Coffee profile
+const BUY_ME_A_COFFEE_URL = "https://buymeacoffee.com/iamtahasc";
 
 // ========= APP ROOT WITH SCROLL SPY & SCROLL-TO-TOP =========
 export default function App() {
@@ -30,82 +35,37 @@ export default function App() {
       "contact",
     ];
 
-    // Enhanced scroll spy with more accurate section detection
+    // Scroll spy based on actual section scroll threshold
     const handleScrollSpy = () => {
-      // Find the section that is most visible in the viewport
-      let mostVisibleSection = "home";
-      let highestVisibility = 0;
-      
-      // Track sections that are actually in view
-      let sectionsInViewport = [];
-      
-      sectionIds.forEach((id) => {
+      const scrollPosition = window.scrollY;
+      const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+      const totalDocHeight = document.documentElement.scrollHeight;
+
+      // Special case: if scrolled to the very bottom of page, activate contact
+      if (windowHeight + scrollPosition >= totalDocHeight - 40) {
+        setActiveSection("contact");
+        setShowScrollTop(true);
+        return;
+      }
+
+      // Offset threshold set to ~35% of viewport height (~280px) so navbar active link 
+      // transitions smoothly when bringing the next section into view (~80% section scroll).
+      const offsetThreshold = Math.min(280, windowHeight * 0.35);
+
+      let currentSection = "home";
+      for (let i = 0; i < sectionIds.length; i++) {
+        const id = sectionIds[i];
         const element = document.getElementById(id);
         if (element) {
           const rect = element.getBoundingClientRect();
-          const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-          
-          // Adjust for navbar height (approximately 80px)
-          const navbarHeight = 80;
-          
-          // Check if section is in viewport (at least partially)
-          const isInViewport = rect.top < windowHeight && rect.bottom > navbarHeight;
-          
-          if (isInViewport) {
-            // Calculate visibility percentage
-            const elementHeight = rect.bottom - rect.top;
-            const visibleHeight = Math.min(rect.bottom, windowHeight) - Math.max(rect.top, navbarHeight);
-            const visibilityPercentage = elementHeight > 0 ? visibleHeight / elementHeight : 0;
-            
-            if (visibilityPercentage > highestVisibility) {
-              highestVisibility = visibilityPercentage;
-              mostVisibleSection = id;
-            }
-            
-            // Add to viewport sections if visibility is significant
-            if (visibilityPercentage > 0.05) {
-              sectionsInViewport.push({ id, visibility: visibilityPercentage });
-            }
+          if (rect.top <= offsetThreshold) {
+            currentSection = id;
           }
         }
-      });
-      
-      // Sort sections by visibility
-      sectionsInViewport.sort((a, b) => b.visibility - a.visibility);
-      
-      // Special case: If we're near the top of the page, always show home
-      let activeSection = "home";
-      if (window.scrollY >= 100) {
-        if (sectionsInViewport.length > 0) {
-          // Use the most visible section
-          activeSection = sectionsInViewport[0].id;
-        } else {
-          // Fallback: find the section whose top is closest to navbar
-          let closestSection = "home";
-          let smallestDistance = Infinity;
-          
-          sectionIds.forEach((id) => {
-            const element = document.getElementById(id);
-            if (element) {
-              const rect = element.getBoundingClientRect();
-              const navbarHeight = 80;
-              const distanceFromTop = Math.abs(rect.top - navbarHeight);
-              if (distanceFromTop < smallestDistance) {
-                smallestDistance = distanceFromTop;
-                closestSection = id;
-              }
-            }
-          });
-          
-          activeSection = closestSection;
-        }
       }
-      
-      // Debug logging - remove in production
-      // console.log('Active section:', activeSection, 'Sections in viewport:', sectionsInViewport);
-      
-      setActiveSection(activeSection);
-      setShowScrollTop(window.scrollY > 300);
+
+      setActiveSection(currentSection);
+      setShowScrollTop(scrollPosition > 300);
     };
 
     // Throttle the scroll handler for better performance
@@ -188,6 +148,7 @@ export default function App() {
     <div className="min-h-screen bg-black text-slate-50 font-sans">
       <Navbar activeSection={activeSection} onNavClick={handleNavClick} />
       <Hero />
+      <Quote />
       <About />
       <Experience />
       <Education />
@@ -197,10 +158,31 @@ export default function App() {
       <Contact />
       <footer className="w-full backdrop-blur-sm bg-white/5">
         <div className="h-1 w-full bg-gradient-to-r from-transparent via-sky-900/10 to-transparent pointer-events-none" />
-        <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-center">
-          <p className="text-sm text-slate-400 hover:text-slate-300 transition duration-300 text-center">
-            © {new Date().getFullYear()} Taha Contractor. All rights reserved.
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5 flex flex-col items-center gap-3 text-center">
+          <h4 className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-sky-400/90">
+            Support My Work
+          </h4>
+
+          <p className="max-w-sm text-xs sm:text-sm text-slate-400 leading-relaxed">
+            If you find my work useful, consider supporting my journey.
           </p>
+
+          <a
+            href="https://buymeacoffee.com/taha.contractor"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group mt-1 inline-flex items-center gap-2 rounded-full border border-amber-400/25 bg-amber-400/[0.06] px-4 py-2 text-xs sm:text-sm font-medium text-amber-200/80 transition-all duration-300 hover:border-amber-400/50 hover:bg-amber-400/10 hover:text-amber-100 hover:shadow-[0_0_20px_rgba(251,191,36,0.12)]"
+          >
+            <FaCoffee className="text-base" />
+            <span>Buy Me a Coffee</span>
+            <FiArrowRight className="text-sm transition-transform duration-300 group-hover:translate-x-0.5" />
+          </a>
+
+          <div className="w-full border-t border-white/5 pt-4">
+            <p className="text-xs text-slate-500 hover:text-slate-400 transition duration-300">
+              © {new Date().getFullYear()} Taha Contractor. All rights reserved.
+            </p>
+          </div>
         </div>
       </footer>
       <ProjectDetailModal
